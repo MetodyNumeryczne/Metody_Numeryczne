@@ -10,10 +10,11 @@ int main() {
     double *vectorB=NULL;
     int *ok=new int();
     int *pivot=NULL;
+    char choice='U'; //U- data from user, F- data from File
     while(1){
         if(choice = 'F'){
 
-
+        //...
         }
         if(choice = 'U'){
             cout<<"Podaj rozmiar macierzy A"<<endl;
