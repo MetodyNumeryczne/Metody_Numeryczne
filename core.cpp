@@ -88,6 +88,48 @@ int getIntFromUser(bool onlyPositiveNumbers){
             std::cin.ignore(100,'\n');
         }
     }
-
     return value;
+}
+double* getMatrixFromFile(std::string URL, int &matrixDimention,char type){
+    std::ifstream file;
+    file.open(URL.data());
+
+    if(!file.is_open()){
+        std::cout<<"Could not open file";
+        return NULL;
+    }
+    std::vector<double> data;
+
+    while (true) {
+        double x;
+        if(file >> x)
+            data.push_back(x);
+        else
+            break;
+    }
+
+    if(type=='M'){
+        if(!isPerfectSquare(data.size()) || data.size()<1){
+            std::cout<<"Dane z pliku nie tworzą macierzy kwadratowej"<<std::endl;
+            return NULL;
+        }
+        matrixDimention=sqrt(data.size());
+    }
+    else if(type=='V')
+        matrixDimention=data.size();
+    else
+        std::cout<<"Invalid type"<<std::endl;
+
+    double *matrix= new double[data.size()];
+    for(int i=0;i<data.size();i++)
+        matrix[i]=data.at(i);
+    return matrix;
+
+
+}
+bool isPerfectSquare(int n) {
+    if (n < 0)
+        return false;
+    int root(round(sqrt(n)));
+    return n == root * root;
 }
