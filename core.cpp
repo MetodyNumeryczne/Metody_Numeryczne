@@ -7,17 +7,26 @@ bool computeLinearEquationUsingLU(char order, int matrixDimention, double *matri
 
     //Create simple pivots for equation solving
     int *pivot = new int[matrixDimention];
+    //for(int i=0;i<matrixDimention;i++)
+      //  pivot[i]=i+1;
 
-    for(int i=1;i<=matrixDimention;i++)
-        pivot[i]=i;
 
-    int ok;
+    int ok=1;
+    int nrhs=1;
 
+    //LU factorization
+    //dgetrf_(&matrixDimention, &matrixDimention, matrixA, &matrixDimention, pivot, &ok);
+    dgetrf_(&matrixDimention, &matrixDimention, matrixA, &matrixDimention, pivot, &ok);
+
+    if(ok){
+        std::cout<<"Error in LU factorization dgetrf_"<<std::endl;
+        return false;
+    }
+
+    //Compute Equation using LU factorization
     dgetrs_( &order, &matrixDimention,
-             &matrixDimention,
-             matrixA, &matrixDimention,
+             &nrhs, matrixA, &matrixDimention,
              pivot, matrixB, &matrixDimention, &ok);
-
     delete[] pivot;
     //ok==0 then dgetrs was succesfull
     if(ok)
@@ -44,6 +53,9 @@ bool computeLinearEquationUsingQR(char order, int matrixDimention, double *matri
            &ok );
     if(ok==0)
         lwork=wkopt;
+    else
+        return false;
+
     work=new double[lwork];
 
     dgels_( &order, &matrixDimention, &matrixDimention, &nrhs, matrixA,
