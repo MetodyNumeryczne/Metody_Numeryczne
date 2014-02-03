@@ -121,7 +121,7 @@ double* getMatrixFromFile(std::string URL, int &matrixDimention,char type){
         std::cout<<"Invalid type"<<std::endl;
 
     double *matrix= new double[data.size()];
-    for(int i=0;i<data.size();i++)
+    for(unsigned int i=0;i<data.size();i++)
         matrix[i]=data.at(i);
     return matrix;
 

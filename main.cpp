@@ -11,53 +11,60 @@ int main() {
     double *vectorB=NULL;
     double *matrixCopyA=NULL;
     double *vectorCopyB=NULL;
+    char choice=0;
 
-    char choice='F'; //U- data from user, F- data from File
     while(1){
-        if(choice == 'F'){
-            std::string URL;
-            std::cout<<"Podaj ścieżkę do pliku z macierzą A";
-            std::cin>>URL;
-            matrixA=getMatrixFromFile(URL,matrixADimention,'M');
-            if(matrixA==NULL){
-                std::cout<<"Could not get matrix from file";
-                break;
-            }
-            std::cout<<"Podaj sciezke do pliku z wektorem B";
-            std::cin>>URL;
-            int tempDimention;
-            vectorB=getMatrixFromFile(URL,tempDimention,'V');
-            if(vectorB==NULL || tempDimention!=matrixADimention){
-                std::cout<<"Błąd podczas odczytu wektora B";
-                delete[] matrixA;
-                matrixA=NULL;
-                if(vectorB!=NULL){
-                    delete[] vectorB;
-                    vectorB=NULL;
+        while(1){
+            std::cout<<"Rodzaj akcji:"<<std::endl;
+            std::cout<<"U Dane wpisane w konsoli"<<std::endl;
+            std::cout<<"F Dane wczytane z pliku"<<std::endl;
+            while(choice != 'F' && choice !='U')
+                std::cin>>choice;
+
+            if(choice == 'F'){
+                std::string URL;
+                std::cout<<"Podaj ścieżkę do pliku z macierzą A"<<std::endl;
+                std::cin>>URL;
+                matrixA=getMatrixFromFile(URL,matrixADimention,'M');
+                if(matrixA==NULL){
+                    std::cout<<"Could not get matrix from file"<<std::endl;
+                    break;
                 }
-                break;
-            }
-
-        //...
-        }
-        if(choice == 'U'){
-            cout<<"Podaj rozmiar macierzy A"<<endl;
-            matrixADimention=getIntFromUser(true);
-
-            matrixA = new double[matrixADimention*matrixADimention];
-            vectorB = new double[matrixADimention];
-
-            for(int i=0;i<matrixADimention;i++)
-                for(int j=0;j<matrixADimention;j++){
-                    std::cout<<"Podaj element macierzy A "<<i<<" "<<j<<std::endl;
-                    std::cin>>matrixA[matrixADimention*i+j];
+                std::cout<<"Podaj sciezke do pliku z wektorem B"<<std::endl;
+                std::cin>>URL;
+                int tempDimention;
+                vectorB=getMatrixFromFile(URL,tempDimention,'V');
+                if(vectorB==NULL || tempDimention!=matrixADimention){
+                    std::cout<<"Błąd podczas odczytu wektora B";
+                    delete[] matrixA;
+                    matrixA=NULL;
+                    if(vectorB!=NULL){
+                        delete[] vectorB;
+                        vectorB=NULL;
+                    }
+                    break;
                 }
 
-            for(int i=0;i<matrixADimention;i++){
-                std::cout<<"Podaj element wektora B "<<i<<std::endl;
-                std::cin>>vectorB[i];
+            //...
             }
-    }
+            if(choice == 'U'){
+                cout<<"Podaj rozmiar macierzy A"<<std::endl;
+                matrixADimention=getIntFromUser(true);
+
+                matrixA = new double[matrixADimention*matrixADimention];
+                vectorB = new double[matrixADimention];
+
+                for(int i=0;i<matrixADimention;i++)
+                    for(int j=0;j<matrixADimention;j++){
+                        std::cout<<"Podaj element macierzy A "<<i<<" "<<j<<std::endl;
+                        std::cin>>matrixA[matrixADimention*i+j];
+                    }
+
+                for(int i=0;i<matrixADimention;i++){
+                    std::cout<<"Podaj element wektora B "<<i<<std::endl;
+                    std::cin>>vectorB[i];
+                }
+            }
             //Chose QR or LU
             std::cout<<"1.Compute Equation using QR"<<std::endl;
             std::cout<<"2.Compute Equation using LU"<<std::endl;
@@ -89,7 +96,7 @@ int main() {
                 result = computeLinearEquationUsingLU('T',matrixADimention, matrixCopyA, vectorCopyB);
             }
             else
-                std::cout<<"This should never happen";
+                std::cout<<"This should never happen"<<std::endl;
 
             if(result && (type ==1 || type==2)){
                 cout<<"Wynik: "<<endl;
@@ -107,13 +114,14 @@ int main() {
                 delete[] vectorCopyB;
             }
             else
-                std::cout<<"Could not solve equation";
+                std::cout<<"Could not solve equation"<<std::endl;
 
             delete[] matrixA;
             delete[] vectorB;
             matrixA=NULL;
             vectorB=NULL;
         }
+    }
 
     return 0;
 }
