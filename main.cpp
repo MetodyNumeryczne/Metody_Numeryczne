@@ -12,6 +12,7 @@ int main() {
     double *matrixCopyA=NULL;
     double *vectorCopyB=NULL;
     char choice=0;
+    std::cout.precision(15);
     while(1){
         while(1){
             choice = 0;
@@ -112,10 +113,11 @@ int main() {
                 cout<<"Wynik LU: "<<endl;
                 for(int i=0;i<matrixADimention;i++)
                     std::cout<<vectorCopyB[i]<<std::endl;
+
+                    saveVectorToFile(vectorB,matrixADimention);
+                    saveVectorToFile(vectorCopyB,matrixADimention);
                 delete[] matrixCopyA;
                 delete[] vectorCopyB;
-                saveVectorToFile(vectorB,matrixADimention);
-                saveVectorToFile(vectorCopyB,matrixADimention);
             }
             else
                 std::cout<<"Could not solve equation"<<std::endl;
