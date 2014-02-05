@@ -29,8 +29,10 @@ bool computeLinearEquationUsingLU(char order, int matrixDimention, double *matri
              pivot, matrixB, &matrixDimention, &ok);
     delete[] pivot;
     //ok==0 then dgetrs was succesfull
-    if(ok)
+    if(ok){
+        std::cout<<"Error in computing equation using LU factorization dgetrs_"<<std::endl;
         return false;
+    }
     else
         return true;
 }
@@ -53,8 +55,10 @@ bool computeLinearEquationUsingQR(char order, int matrixDimention, double *matri
            &ok );
     if(ok==0)
         lwork=wkopt;
-    else
+    else{
+        std::cout<<"Error in QR factorization dgels_"<<std::endl;
         return false;
+    }
 
     work=new double[lwork];
 
@@ -63,8 +67,10 @@ bool computeLinearEquationUsingQR(char order, int matrixDimention, double *matri
            &ok );
     delete[] work;
 
-    if(ok)
+    if(ok){
+        std::cout<<"Error in computing equation using QR factorization dgels_"<<std::endl;
         return false;
+    }
     else
         return true;
 }
@@ -106,6 +112,7 @@ double* getMatrixFromFile(std::string URL, int &matrixDimention,char type){
             data.push_back(x);
         else
             break;
+
     }
 
     if(type=='M'){
@@ -123,10 +130,39 @@ double* getMatrixFromFile(std::string URL, int &matrixDimention,char type){
     double *matrix= new double[data.size()];
     for(unsigned int i=0;i<data.size();i++)
         matrix[i]=data.at(i);
+
+    file.close();
+
     return matrix;
-
-
 }
+void saveVectorToFile( double *vector, int size){
+
+    std::cout<<"Czy zapisać wynik do pliku?"<<std::endl;
+    std::cout<<"Tak [Y]"<<std::endl;
+    std::cout<<"Nie [N]"<<std::endl;
+    char choice=0;
+    std::cin>>choice;
+    std::string URL;
+    if(choice == 'Y'){
+
+        std::cout<<"Podaj ścieżkę dla zapisywanego pliku"<<std::endl;
+        std::cin>>URL;
+    }
+
+    std::ofstream file;
+    file.open(URL.data());
+
+    if(!file.is_open()){
+        std::cout<<"Could not open file";
+        return;
+    }
+    for( int i=0; i<size; i++){
+        file<<vector[i]<<" ";
+    }
+    file.flush();
+    file.close();
+}
+
 bool isPerfectSquare(int n) {
     if (n < 0)
         return false;

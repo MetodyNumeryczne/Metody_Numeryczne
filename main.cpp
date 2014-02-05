@@ -12,9 +12,9 @@ int main() {
     double *matrixCopyA=NULL;
     double *vectorCopyB=NULL;
     char choice=0;
-
     while(1){
         while(1){
+            choice = 0;
             std::cout<<"Rodzaj akcji:"<<std::endl;
             std::cout<<"U Dane wpisane w konsoli"<<std::endl;
             std::cout<<"F Dane wczytane z pliku"<<std::endl;
@@ -75,13 +75,14 @@ int main() {
                 type=getIntFromUser();
             }
 
-            bool result=false;
+            bool resultQR=false;
+            bool resultLU= false;
             //QR
             if(type == 1)
-                result = computeLinearEquationUsingQR('T',matrixADimention,matrixA,vectorB);
+                resultQR = computeLinearEquationUsingQR('T',matrixADimention,matrixA,vectorB);
             //LU
             else if(type == 2)
-                result = computeLinearEquationUsingLU('T',matrixADimention, matrixA, vectorB);
+                resultLU = computeLinearEquationUsingLU('T',matrixADimention, matrixA, vectorB);
             //Both
             else if (type ==3){
                 matrixCopyA = new double[matrixADimention*matrixADimention];
@@ -90,20 +91,21 @@ int main() {
                     matrixCopyA[i]=matrixA[i];
                 for(int i=0;i<matrixADimention;i++)
                     vectorCopyB[i]=vectorB[i];
-                result = computeLinearEquationUsingQR('T',matrixADimention,matrixA,vectorB);
-                if(result==false)
-                    break;
-                result = computeLinearEquationUsingLU('T',matrixADimention, matrixCopyA, vectorCopyB);
+                resultQR = computeLinearEquationUsingQR('T',matrixADimention,matrixA,vectorB);
+                resultLU = computeLinearEquationUsingLU('T',matrixADimention, matrixCopyA, vectorCopyB);
             }
             else
                 std::cout<<"This should never happen"<<std::endl;
 
-            if(result && (type ==1 || type==2)){
+            if((resultQR || resultLU) && (type ==1 || type==2)){
                 cout<<"Wynik: "<<endl;
                 for(int i=0;i<matrixADimention;i++)
                     std::cout<<vectorB[i]<<std::endl;
+
+                saveVectorToFile(vectorB,matrixADimention);
+
             }
-            else if(result && type ==3){
+            else if(resultQR && resultLU && type ==3){
                 cout<<"Wynik QR: "<<endl;
                 for(int i=0;i<matrixADimention;i++)
                     std::cout<<vectorB[i]<<std::endl;
@@ -112,6 +114,8 @@ int main() {
                     std::cout<<vectorCopyB[i]<<std::endl;
                 delete[] matrixCopyA;
                 delete[] vectorCopyB;
+                saveVectorToFile(vectorB,matrixADimention);
+                saveVectorToFile(vectorCopyB,matrixADimention);
             }
             else
                 std::cout<<"Could not solve equation"<<std::endl;

@@ -20,7 +20,8 @@ int getIntFromUser(bool onlyPositiveNumbers = false);
 //Non double data breaks reading from file
 //Returns pointer to matrix with size matrixDimention*matirxDimention
 double* getMatrixFromFile(std::string URL, int &matrixDimention, char type);
-
+//Save solution to file given by URL
+void saveVectorToFile(double *vector, int size);
 //Checks if number is perfect square like 1,4,9,16 ... returns true if it is.
 bool isPerfectSquare(int n);
 #endif // CORE_H
