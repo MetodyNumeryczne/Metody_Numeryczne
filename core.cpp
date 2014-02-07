@@ -5,17 +5,13 @@ bool computeLinearEquationUsingLU(char order, int matrixDimention, double *matri
     if(matrixDimention<=0)
         return false;
 
-    //Create simple pivots for equation solving
+    //Create pivots for equation solving
     int *pivot = new int[matrixDimention];
-    //for(int i=0;i<matrixDimention;i++)
-      //  pivot[i]=i+1;
-
 
     int ok=1;
     int nrhs=1;
 
     //LU factorization
-    //dgetrf_(&matrixDimention, &matrixDimention, matrixA, &matrixDimention, pivot, &ok);
     dgetrf_(&matrixDimention, &matrixDimention, matrixA, &matrixDimention, pivot, &ok);
 
     if(ok){
@@ -28,6 +24,7 @@ bool computeLinearEquationUsingLU(char order, int matrixDimention, double *matri
              &nrhs, matrixA, &matrixDimention,
              pivot, matrixB, &matrixDimention, &ok);
     delete[] pivot;
+    pivot=NULL;
     //ok==0 then dgetrs was succesfull
     if(ok){
         std::cout<<"Error in computing equation using LU factorization dgetrs_"<<std::endl;
@@ -48,7 +45,7 @@ bool computeLinearEquationUsingQR(char order, int matrixDimention, double *matri
 
     int ok;
     double wkopt;
-    double *work;
+    double *work=NULL;
     int lwork=-1;
     dgels_( &order, &matrixDimention, &matrixDimention, &nrhs, matrixA,
            &matrixDimention, matrixB, &matrixDimention, &wkopt, &lwork,
@@ -66,6 +63,7 @@ bool computeLinearEquationUsingQR(char order, int matrixDimention, double *matri
            &matrixDimention, matrixB, &matrixDimention, work, &lwork,
            &ok );
     delete[] work;
+    work=NULL;
 
     if(ok){
         std::cout<<"Error in computing equation using QR factorization dgels_"<<std::endl;
@@ -112,7 +110,6 @@ double* getMatrixFromFile(std::string URL, int &matrixDimention,char type){
             data.push_back(x);
         else
             break;
-
     }
 
     if(type=='M'){
@@ -148,7 +145,8 @@ void saveVectorToFile( double *vector, int size){
         std::cout<<"Podaj ścieżkę dla zapisywanego pliku"<<std::endl;
         std::cin>>URL;
     }
-
+    else
+        return;
     std::ofstream file;
     file.open(URL.data());
 

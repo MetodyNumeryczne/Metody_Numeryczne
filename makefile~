@@ -1,0 +1,2 @@
+all:
+	g++ -L/usr/lib/lapack -L /usr/lib/blas -lblas -llapack main.cpp core.cpp -o main

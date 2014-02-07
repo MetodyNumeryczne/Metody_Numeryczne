@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
-#include <core.h>
+#include "core.h"
 using namespace  std;
 /* Main program */
 int main() {
@@ -12,7 +12,8 @@ int main() {
     double *matrixCopyA=NULL;
     double *vectorCopyB=NULL;
     char choice=0;
-    std::cout.precision(15);
+    std::cout.precision(50);
+
     while(1){
         while(1){
             choice = 0;
@@ -58,12 +59,12 @@ int main() {
                 for(int i=0;i<matrixADimention;i++)
                     for(int j=0;j<matrixADimention;j++){
                         std::cout<<"Podaj element macierzy A "<<i<<" "<<j<<std::endl;
-                        std::cin>>matrixA[matrixADimention*i+j];
+                        matrixA[matrixADimention*i+j] = getIntFromUser();
                     }
 
                 for(int i=0;i<matrixADimention;i++){
                     std::cout<<"Podaj element wektora B "<<i<<std::endl;
-                    std::cin>>vectorB[i];
+                    vectorB[i] = getIntFromUser();
                 }
             }
             //Chose QR or LU
@@ -94,6 +95,8 @@ int main() {
                     vectorCopyB[i]=vectorB[i];
                 resultQR = computeLinearEquationUsingQR('T',matrixADimention,matrixA,vectorB);
                 resultLU = computeLinearEquationUsingLU('T',matrixADimention, matrixCopyA, vectorCopyB);
+
+
             }
             else
                 std::cout<<"This should never happen"<<std::endl;
@@ -116,12 +119,20 @@ int main() {
 
                     saveVectorToFile(vectorB,matrixADimention);
                     saveVectorToFile(vectorCopyB,matrixADimention);
-                delete[] matrixCopyA;
-                delete[] vectorCopyB;
+
             }
             else
                 std::cout<<"Could not solve equation"<<std::endl;
 
+            //Free memory
+            if(vectorCopyB!=NULL){
+                delete[] vectorCopyB;
+                vectorCopyB=NULL;
+            }
+            if(matrixCopyA!=NULL){
+                 delete[] matrixCopyA;
+                matrixCopyA=NULL;
+            }
             delete[] matrixA;
             delete[] vectorB;
             matrixA=NULL;
